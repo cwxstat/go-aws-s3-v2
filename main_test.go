@@ -8,8 +8,8 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/cwxstat/go-aws-s3-v2/common"
 	"github.com/rs/xid"
-	"s3-v2/common"
 )
 
 var client *s3.Client

@@ -48,6 +48,22 @@ type S3ListObjectsAPI interface {
 		optFns ...func(*s3.Options)) (*s3.ListBucketsOutput, error)
 }
 
+func ListBuckets(ctx context.Context, client s3.Client) {
+
+	fmt.Println("List buckets: ")
+	//snippet-start:[s3.go-v2.ListBuckets]
+	listBucketsResult, err := client.ListBuckets(context.TODO(), &s3.ListBucketsInput{})
+
+	if err != nil {
+		panic("Couldn't list buckets")
+	}
+
+	for _, bucket := range listBucketsResult.Buckets {
+		fmt.Printf("Bucket name: %s\t\tcreated at: %v\n", *bucket.Name, bucket.CreationDate)
+	}
+
+}
+
 func AccountBucketOps(client s3.Client, name string) {
 
 	fmt.Println("List buckets: ")

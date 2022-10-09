@@ -48,3 +48,17 @@ func TestOps(t *testing.T) {
 	common.BucketDelOps(*client, bucketName)
 
 }
+
+func TestListBuckets(t *testing.T) {
+
+	cfg, err := config.LoadDefaultConfig(context.TODO())
+	if err != nil {
+		panic("Failed to load configuration")
+	}
+	s3client := s3.NewFromConfig(cfg)
+
+	ctx := context.TODO()
+
+	t.Log("Listing buckets...")
+	common.ListBuckets(ctx, *s3client)
+}

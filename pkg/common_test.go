@@ -45,7 +45,7 @@ func TestMakeBucket(t *testing.T) {
 	for _, c := range cases {
 		t.Run(c.name, func(t *testing.T) {
 			ctx := context.TODO()
-			err := MakeBucket(ctx, c.client(t), "bucketName")
+			err := MakeBucket(ctx, c.client(t), "us-east-1", "bucketName")
 			if err != nil {
 				t.Errorf("expected no error, got %v", err)
 			}

@@ -1,12 +1,13 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
-	"github.com/cwxstat/go-aws-s3-v2/common"
 	"github.com/rs/xid"
+	"s3-v2/pkg"
 )
 
 func main() {
@@ -25,16 +26,21 @@ func main() {
 	}
 
 	s3client := s3.NewFromConfig(cfg)
-
 	ctx := context.TODO()
 
-	err = common.MakeBucket(ctx, s3client, myBucketName)
+	err = pkg.MakeBucket(ctx, s3client, cfg.Region, myBucketName)
 	if err != nil {
 		panic("Failed to create bucket")
 	}
+
+	_, err = pkg.PutObject(ctx, s3client, myBucketName, "myobject", bytes.NewReader([]byte("Hi!")))
+	if err != nil {
+		panic("Failed to put object")
+	}
+
 	// TODO: (mmc) make generic and add tests
-	common.BucketOps(ctx, *s3client, myBucketName)
-	common.AccountBucketOps(*s3client, myBucketName)
-	common.BucketDelOps(*s3client, myBucketName)
+	//pkg.BucketOps(ctx, *s3client, myBucketName)
+	//pkg.AccountBucketOps(*s3client, myBucketName)
+	pkg.BucketDelOps(*s3client, myBucketName)
 
 }

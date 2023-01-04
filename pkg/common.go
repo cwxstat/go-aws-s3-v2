@@ -1,4 +1,4 @@
-package common
+package pkg
 
 import (
 	"context"
@@ -17,16 +17,25 @@ type S3CreateBucketAPI interface {
 		optFns ...func(*s3.Options)) (*s3.CreateBucketOutput, error)
 }
 
-func MakeBucket(ctx context.Context, client S3CreateBucketAPI, name string) error {
+func MakeBucket(ctx context.Context, client S3CreateBucketAPI, location string, name string) error {
 	//snippet-start:[s3.go-v2.CreateBucket]
 	// Create a bucket: We're going to create a bucket to hold content.
 	// Best practice is to use the preset private access control list (ACL).
 	// If you are not creating a bucket from us-east-1, you must specify a bucket location constraint.
 	// Bucket names must conform to several rules; read more at https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucketnamingrules.html
+
+	if location == "us-east-1" {
+		_, err := client.CreateBucket(ctx, &s3.CreateBucketInput{
+			Bucket: aws.String(name),
+			ACL:    types.BucketCannedACLPrivate,
+		})
+		return err
+	}
+
 	_, err := client.CreateBucket(ctx, &s3.CreateBucketInput{
 		Bucket:                    aws.String(name),
 		ACL:                       types.BucketCannedACLPrivate,
-		CreateBucketConfiguration: &types.CreateBucketConfiguration{LocationConstraint: types.BucketLocationConstraintUsWest2},
+		CreateBucketConfiguration: &types.CreateBucketConfiguration{LocationConstraint: types.BucketLocationConstraint(location)},
 	})
 
 	if err != nil {
@@ -46,22 +55,6 @@ type S3ListObjectsAPI interface {
 	ListBuckets(ctx context.Context,
 		params *s3.ListObjectsV2Input,
 		optFns ...func(*s3.Options)) (*s3.ListBucketsOutput, error)
-}
-
-func ListBuckets(ctx context.Context, client s3.Client) {
-
-	fmt.Println("List buckets: ")
-	//snippet-start:[s3.go-v2.ListBuckets]
-	listBucketsResult, err := client.ListBuckets(context.TODO(), &s3.ListBucketsInput{})
-
-	if err != nil {
-		panic("Couldn't list buckets")
-	}
-
-	for _, bucket := range listBucketsResult.Buckets {
-		fmt.Printf("Bucket name: %s\t\tcreated at: %v\n", *bucket.Name, bucket.CreationDate)
-	}
-
 }
 
 func AccountBucketOps(client s3.Client, name string) {

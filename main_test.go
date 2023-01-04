@@ -8,8 +8,8 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
-	"github.com/cwxstat/go-aws-s3-v2/common"
 	"github.com/rs/xid"
+	"s3-v2/pkg"
 )
 
 var client *s3.Client
@@ -39,26 +39,12 @@ func TestOps(t *testing.T) {
 	}
 	ctx := context.TODO()
 	t.Log("Creating bucket...")
-	common.MakeBucket(ctx, client, bucketName)
+	pkg.MakeBucket(ctx, client, bucketName)
 	t.Log("Doing things to the bucket...")
-	common.BucketOps(ctx, *client, bucketName)
+	pkg.BucketOps(ctx, *client, bucketName)
 	t.Log("list and such things being done to the bucket...")
-	common.AccountBucketOps(*client, bucketName)
+	pkg.AccountBucketOps(*client, bucketName)
 	t.Log("Cleaning up the bucket...")
-	common.BucketDelOps(*client, bucketName)
+	pkg.BucketDelOps(*client, bucketName)
 
-}
-
-func TestListBuckets(t *testing.T) {
-
-	cfg, err := config.LoadDefaultConfig(context.TODO())
-	if err != nil {
-		panic("Failed to load configuration")
-	}
-	s3client := s3.NewFromConfig(cfg)
-
-	ctx := context.TODO()
-
-	t.Log("Listing buckets...")
-	common.ListBuckets(ctx, *s3client)
 }

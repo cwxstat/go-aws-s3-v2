@@ -1,0 +1,25 @@
+apiVersion: skaffold/v4beta2
+kind: Config
+metadata:
+  name: go-aws-s--v-
+test:
+  - image: 140316811761.dkr.ecr.us-east-1.amazonaws.com/go-aws-s3-v2
+    custom:
+      - command: ./test.sh
+        timeoutSeconds: 60
+        dependencies:
+          paths:
+            -  "*_test.go"
+            -  "test.sh"
+      - command: echo Hello world!!
+        dependencies:
+          command: echo [\"main_test.go\"]
+build:
+  artifacts:
+  - image: 140316811761.dkr.ecr.us-east-1.amazonaws.com/go-aws-s3-v2
+    ko: {}
+manifests:
+  rawYaml:
+  - deployment.yaml
+
+

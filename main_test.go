@@ -39,7 +39,7 @@ func TestOps(t *testing.T) {
 	}
 	ctx := context.TODO()
 	t.Log("Creating bucket...")
-	pkg.MakeBucket(ctx, client, bucketName)
+	pkg.MakeBucket(ctx, client, "us-east-1", bucketName)
 	t.Log("Doing things to the bucket...")
 	pkg.BucketOps(ctx, *client, bucketName)
 	t.Log("list and such things being done to the bucket...")

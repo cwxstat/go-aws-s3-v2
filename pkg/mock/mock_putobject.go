@@ -22,38 +22,38 @@ func (m MockPutObject) PutObject(ctx context.Context, params *s3.PutObjectInput,
 	return m(ctx, params, optFns...)
 }
 
-type MockClient struct {
+type MockClientPutObject struct {
 	bucket          *string
 	putObjectOutput *s3.PutObjectOutput
 	putObjectInput  *s3.PutObjectInput
 	err             error
 }
 
-func NewMockPutObjectClient() *MockClient {
-	return &MockClient{}
+func NewMockPutObjectClient() *MockClientPutObject {
+	return &MockClientPutObject{}
 }
-func (m *MockClient) GetBucket() *string {
+func (m *MockClientPutObject) GetBucket() *string {
 	return m.bucket
 }
 
-func (m *MockClient) ObjectOutput(output *s3.PutObjectOutput) {
+func (m *MockClientPutObject) ObjectOutput(output *s3.PutObjectOutput) {
 	m.putObjectOutput = output
 }
 
-func (m *MockClient) GetPutObjectOutput() *s3.PutObjectOutput {
+func (m *MockClientPutObject) GetPutObjectOutput() *s3.PutObjectOutput {
 	return m.putObjectOutput
 }
 
-func (m *MockClient) GetPutObjectInput() *s3.PutObjectInput {
+func (m *MockClientPutObject) GetPutObjectInput() *s3.PutObjectInput {
 	return m.putObjectInput
 }
 
-func (m *MockClient) GetData(b []byte) ([]byte, error) {
+func (m *MockClientPutObject) GetData(b []byte) ([]byte, error) {
 	n, err := m.putObjectInput.Body.Read(b)
 	return b[:n], err
 }
 
-func (m *MockClient) ClientS3PutObject() pkg.S3PutObjectAPI {
+func (m *MockClientPutObject) ClientS3PutObject() pkg.S3PutObjectAPI {
 	return MockPutObject(func(ctx context.Context, params *s3.PutObjectInput,
 		optFns ...func(*s3.Options)) (*s3.PutObjectOutput, error) {
 		m.bucket = params.Bucket

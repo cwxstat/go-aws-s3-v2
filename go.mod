@@ -1,4 +1,4 @@
-module s3-v2
+module github.com/cwxstat/go-aws-s3-v2
 
 go 1.19
 

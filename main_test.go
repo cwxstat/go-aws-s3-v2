@@ -1,15 +1,21 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"fmt"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/smithy-go/middleware"
+	"github.com/cwxstat/go-aws-s3-v2/pkg/mock"
+	"io"
 	"log"
+
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/cwxstat/go-aws-s3-v2/pkg"
 	"github.com/rs/xid"
-	"s3-v2/pkg"
 )
 
 var client *s3.Client
@@ -46,5 +52,65 @@ func TestOps(t *testing.T) {
 	pkg.AccountBucketOps(*client, bucketName)
 	t.Log("Cleaning up the bucket...")
 	pkg.BucketDelOps(*client, bucketName)
+
+}
+
+func TestMock_PutObject(t *testing.T) {
+	m := mock.NewMockPutObjectClient()
+	dataToWrite := []byte("Hi!")
+
+	m.ObjectOutput(&s3.PutObjectOutput{
+		BucketKeyEnabled:     false,
+		ETag:                 aws.String("etag"),
+		RequestCharged:       "",
+		ServerSideEncryption: "",
+		ResultMetadata:       middleware.Metadata{},
+	})
+
+	result, err := pkg.PutObject(context.TODO(),
+		m.ClientS3PutObject(),
+		"bucketName", "key",
+		bytes.NewReader(dataToWrite))
+	if err != nil {
+		t.Error(err)
+	}
+	if result == nil {
+		t.Error("Expected a result")
+	}
+
+	data, err := m.GetData(make([]byte, 20))
+	if string(data) != "Hi!" {
+		t.Error("Expected data to be Hi!")
+	}
+
+}
+
+func TestMock_GetObject(t *testing.T) {
+	m := mock.NewMockGetObjectClient()
+
+	dataToWrite := []byte("Hi!")
+	m.ObjectOutput(&s3.GetObjectOutput{
+		BucketKeyEnabled: false,
+		ETag:             aws.String("etag"),
+		Body:             io.NopCloser(bytes.NewReader(dataToWrite)),
+		ResultMetadata:   middleware.Metadata{},
+	})
+
+	output, err := pkg.GetObject(context.TODO(), m.ClientS3GetObject(), "bucketName", "key")
+
+	if err != nil {
+		t.Errorf("expected no error, got %v", err)
+	}
+	if e, a := "etag", *output.ETag; e != a {
+		t.Errorf("expected %v, got %v", e, a)
+	}
+	b := make([]byte, 20)
+	data, err := m.GetData(b)
+	if err != nil {
+		t.Errorf("expected no error, got %v", err)
+	}
+	if e, a := "Hi!", string(data); e != a {
+		t.Errorf("expected %v, got %v", e, a)
+	}
 
 }

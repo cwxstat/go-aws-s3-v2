@@ -3,7 +3,7 @@ package mock
 import (
 	"context"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
-	"s3-v2/pkg"
+	"github.com/cwxstat/go-aws-s3-v2/pkg"
 )
 
 type MockCreateBucket func(ctx context.Context, params *s3.CreateBucketInput,
@@ -29,7 +29,7 @@ type MockClient struct {
 	err             error
 }
 
-func NewMockClient() *MockClient {
+func NewMockPutObjectClient() *MockClient {
 	return &MockClient{}
 }
 func (m *MockClient) GetBucket() *string {

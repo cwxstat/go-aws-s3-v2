@@ -6,13 +6,13 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/smithy-go/middleware"
-	"s3-v2/pkg"
+	"github.com/cwxstat/go-aws-s3-v2/pkg"
 	"testing"
 )
 
 func TestMockClient_ClientS3PutObject(t *testing.T) {
 
-	m := NewMockClient()
+	m := NewMockPutObjectClient()
 	m.ObjectOutput(&s3.PutObjectOutput{
 		BucketKeyEnabled:        false,
 		ETag:                    aws.String("etag"),

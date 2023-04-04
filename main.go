@@ -17,7 +17,7 @@ func main() {
 	// Remember that bucket names must be globally unique among all buckets.
 
 	myBucketName := "mybucket-" + (xid.New().String())
-	fmt.Printf("Bucket name: %v\n", myBucketName)
+	fmt.Printf("bucket name: %v\n", myBucketName)
 
 	cfg, err := config.LoadDefaultConfig(context.TODO())
 

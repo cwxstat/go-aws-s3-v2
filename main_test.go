@@ -21,7 +21,7 @@ func init() {
 	log.Println("Setting up suite")
 
 	bucketName = "mybucket-" + (xid.New().String())
-	fmt.Printf("Bucket name: %v\n", bucketName)
+	fmt.Printf("bucket name: %v\n", bucketName)
 
 	cfg, err := config.LoadDefaultConfig(context.TODO())
 

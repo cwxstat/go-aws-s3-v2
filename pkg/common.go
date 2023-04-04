@@ -22,7 +22,7 @@ func MakeBucket(ctx context.Context, client S3CreateBucketAPI, location string, 
 	// Create a bucket: We're going to create a bucket to hold content.
 	// Best practice is to use the preset private access control list (ACL).
 	// If you are not creating a bucket from us-east-1, you must specify a bucket location constraint.
-	// Bucket names must conform to several rules; read more at https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucketnamingrules.html
+	// bucket names must conform to several rules; read more at https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucketnamingrules.html
 
 	if location == "us-east-1" {
 		_, err := client.CreateBucket(ctx, &s3.CreateBucketInput{
@@ -68,7 +68,7 @@ func AccountBucketOps(client s3.Client, name string) {
 	}
 
 	for _, bucket := range listBucketsResult.Buckets {
-		fmt.Printf("Bucket name: %s\t\tcreated at: %v\n", *bucket.Name, bucket.CreationDate)
+		fmt.Printf("bucket name: %s\t\tcreated at: %v\n", *bucket.Name, bucket.CreationDate)
 	}
 	//snippet-end:[s3.go-v2.ListBuckets]
 

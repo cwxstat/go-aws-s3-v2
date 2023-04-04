@@ -17,7 +17,7 @@ func main() {
 	// Remember that bucket names must be globally unique among all buckets.
 
 	myBucketName := "mybucket-" + (xid.New().String())
-	fmt.Printf("Bucket name: %v\n", myBucketName)
+	fmt.Printf("bucket name: %v\n", myBucketName)
 
 	cfg, err := config.LoadDefaultConfig(context.TODO())
 
@@ -30,7 +30,7 @@ func main() {
 
 	err = pkg.MakeBucket(ctx, s3client, cfg.Region, myBucketName)
 	if err != nil {
-		panic("Failed to create bucket")
+		panic("Make bucket error: " + err.Error())
 	}
 
 	_, err = pkg.PutObject(ctx, s3client, myBucketName, "myobject", bytes.NewReader([]byte("Hi!")))

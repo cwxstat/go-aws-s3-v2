@@ -75,3 +75,34 @@ func TestMock_GetObject(t *testing.T) {
 
 }
 ```
+
+## Example Mock Make Bucket
+
+```go
+func TestMock_MakeBucket(t *testing.T) {
+	m := mock.NewMockCreateBucketClient()
+	m.CreateBucketOutput(&s3.CreateBucketOutput{
+		Location:       aws.String("us-east-2"),
+		ResultMetadata: middleware.Metadata{},
+	})
+
+	err := pkg.MakeBucket(context.TODO(), m.ClientCreateBucket(),
+		"us-east-2", "bucketName")
+	if err != nil {
+		t.Errorf("expected no error, got %v", err)
+	}
+
+	output := m.GetCreateBucketOutput()
+	if e, a := "us-east-2", *output.Location; e != a {
+		t.Errorf("expected %v, got %v", e, a)
+	}
+	input := m.GetCreateBucketInput()
+	if e, a := "bucketName", *input.Bucket; e != a {
+		t.Errorf("expected %v, got %v", e, a)
+	}
+
+}
+
+
+
+```

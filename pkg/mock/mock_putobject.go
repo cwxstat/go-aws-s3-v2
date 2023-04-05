@@ -6,14 +6,6 @@ import (
 	"github.com/cwxstat/go-aws-s3-v2/pkg"
 )
 
-type MockCreateBucket func(ctx context.Context, params *s3.CreateBucketInput,
-	optFns ...func(*s3.Options)) (*s3.CreateBucketOutput, error)
-
-func (m MockCreateBucket) CreateBucket(ctx context.Context, params *s3.CreateBucketInput,
-	optFns ...func(*s3.Options)) (*s3.CreateBucketOutput, error) {
-	return m(ctx, params, optFns...)
-}
-
 type MockPutObject func(ctx context.Context, params *s3.PutObjectInput,
 	optFns ...func(*s3.Options)) (*s3.PutObjectOutput, error)
 

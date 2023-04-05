@@ -134,7 +134,7 @@ type S3NewPresignClient interface {
 		optFns ...func(*s3.Options)) (*s3.PresignClient, error)
 }
 
-func PutObject(ctx context.Context, client S3PutObjectAPI, bucket, key string, body io.ReadSeeker) (*s3.PutObjectOutput, error) {
+func PutObject(ctx context.Context, client S3PutObjectAPI, bucket, key string, body io.Reader) (*s3.PutObjectOutput, error) {
 
 	o, err := client.PutObject(ctx, &s3.PutObjectInput{
 		Bucket: aws.String(bucket),
